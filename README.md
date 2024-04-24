@@ -14,7 +14,7 @@ Before running the app, make sure you have Node.js and Expo CLI installed on you
 1. Clone the repository or download the zip file:
 
 #####
-    git clone
+    git clone https://github.com/barnabas243/reactnative_TicTacToe.git
 
 2. Navigate to the project directory:
 #####
@@ -32,6 +32,8 @@ To run the app, use the following command:
     npm start
     
 
+## License
 
+This project is licensed under the [MIT License](LICENSE).
 
 
