@@ -1,17 +1,20 @@
 # Tic Tac Toe Game
 
-This is a simple Tic Tac Toe game built using React Native.
+This is a simple Tic Tac Toe built using React Native.
 
-## Preview
-
-![Tic Tac Toe Demo](https://example.com/path/to/your/screenshot.jpg)
+please view the expo.txt file for the link to the online development server
 
 ## Table of Contents
-
+- [Preview](#preview)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Running the App](#running-the-app)
 - [License](#license)
+
+## Preview
+
+![Tic Tac Toe Demo](screenshot.jpg)
+
 
 ## Prerequisites
 

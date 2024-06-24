@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Animated,
+  Easing,
+} from 'react-native';
+
+const gradientColors = ['#1037e5', '#B38DFD', '#9456FE', '#6305fc'];
+
+const image = require('./assets/background.jpg') || {
+  uri: 'https://snack-code-uploads.s3.us-west-1.amazonaws.com/~asset/5f1fe181767506fa35e5794687c91399',
+};
 
 export default function App() {
   // Initialize the Tic-Tac-Toe board as a 3x3 matrix
   const [board, setBoard] = useState([
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', '']
+    ['◯', '◯', '◯'],
+    ['X', '◯', 'X'],
+    ['◯', 'X', 'X'],
   ]);
 
   // Track the current player (X or O)
@@ -35,7 +50,7 @@ export default function App() {
       }
       // Check for draw condition
       if (checkDraw(newBoard)) {
-        alert('It\'s a draw!');
+        alert("It's a draw!");
         setGameOver(true); // Mark the game as over
         return;
       }
@@ -66,9 +81,13 @@ export default function App() {
     }
     // Check for diagonal line (top-left to bottom-right)
     if (
-      (board[0][0] === currentPlayer && board[1][1] === currentPlayer && board[2][2] === currentPlayer) ||
+      (board[0][0] === currentPlayer &&
+        board[1][1] === currentPlayer &&
+        board[2][2] === currentPlayer) ||
       // Check for diagonal line (top-right to bottom-left)
-      (board[0][2] === currentPlayer && board[1][1] === currentPlayer && board[2][0] === currentPlayer)
+      (board[0][2] === currentPlayer &&
+        board[1][1] === currentPlayer &&
+        board[2][0] === currentPlayer)
     ) {
       return true;
     }
@@ -92,12 +111,42 @@ export default function App() {
     setBoard([
       ['', '', ''],
       ['', '', ''],
-      ['', '', '']
+      ['', '', ''],
     ]);
     setCurrentPlayer('X'); // Reset the current player to X
     setGameOver(false); // Mark the game as not over
   };
 
+  // Animated border styles
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const startAnimation = () => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(animatedValue, {
+            toValue: 1,
+            duration: 5000,
+            easing: Easing.linear,
+            useNativeDriver: false,
+          }),
+          Animated.timing(animatedValue, {
+            toValue: 0,
+            duration: 5000,
+            easing: Easing.linear,
+            useNativeDriver: false,
+          }),
+        ])
+      ).start();
+    };
+
+    startAnimation();
+  }, [animatedValue]);
+
+  const borderColor = animatedValue.interpolate({
+    inputRange: [0, 0.33, 0.66, 1],
+    outputRange: gradientColors,
+  });
   // Render the board
   const renderBoard = () => {
     return board.map((row, rowIndex) => (
@@ -109,7 +158,10 @@ export default function App() {
           if (rowIndex === 1 && colIndex === 1) {
             borderStyle = styles.boxFullBorder;
             // the middle top and bottom cells to have leftright border
-          } else if (rowIndex === 0 && colIndex === 1 || rowIndex === 2 && colIndex === 1) {
+          } else if (
+            (rowIndex === 0 && colIndex === 1) ||
+            (rowIndex === 2 && colIndex === 1)
+          ) {
             borderStyle = styles.boxLeftRightBorder;
             // the middle left and right cells to have topbottom border
           } else if (rowIndex === 1 && (colIndex === 0 || colIndex === 2)) {
@@ -122,7 +174,13 @@ export default function App() {
               onPress={() => handleMove(rowIndex, colIndex)}
               disabled={cell !== '' || gameOver} // Disable cell if it's not empty or the game is over
             >
-              <Text style={styles.cellText}>{cell}</Text>
+              <Text
+                style={[
+                  styles.cellText,
+                  cell === 'X' ? styles.blueText : styles.redText,
+                ]}>
+                {cell}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -133,14 +191,21 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-      {renderBoard()}
-      <TouchableOpacity style={styles.resetButton} onPress={resetBoard}>
-        <Text style={styles.resetButtonText}>Reset</Text>
-      </TouchableOpacity>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <Animated.View style={[styles.innerContainer, { borderColor }]}>
+          {renderBoard()}
+
+          <TouchableOpacity style={styles.resetButton} onPress={resetBoard}>
+            <Text style={styles.resetButtonText}>Reset</Text>
+          </TouchableOpacity>
+          <Text style={styles.smallText}>
+            Tap <Text style={styles.boldText}>reset</Text> to play
+          </Text>
+        </Animated.View>
+      </ImageBackground>
     </View>
   );
 }
-
 
 const windowWidth = Dimensions.get('window').width - 50;
 
@@ -151,6 +216,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 5,
+    padding: 15,
+    marginHorizontal: 5,
+    backgroundColor: '#000000d0',
+  },
   row: {
     flexDirection: 'row',
   },
@@ -159,33 +238,56 @@ const styles = StyleSheet.create({
     aspectRatio: 1, // Maintain aspect ratio (height will be calculated automatically)
     alignItems: 'center',
     justifyContent: 'center',
+    alignContent: 'center',
   },
   cellText: {
-    fontSize: 60,
+    fontSize: 80,
   },
   boxFullBorder: {
-    borderWidth: 1,
+    borderWidth: 2,
+    borderColor: '#fff',
   },
   boxTopBottomBorder: {
-    borderTopColor: 'black',
-    borderTopWidth: 1,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
+    borderTopColor: '#fff',
+    borderTopWidth: 2,
+    borderBottomColor: '#fff',
+    borderBottomWidth: 2,
   },
   boxLeftRightBorder: {
-    borderRightColor: 'black',
-    borderRightWidth: 1,
-    borderLeftColor: 'black',
-    borderLeftWidth: 1,
+    borderRightColor: '#fff',
+    borderRightWidth: 2,
+    borderLeftColor: '#fff',
+    borderLeftWidth: 2,
   },
   resetButton: {
-    backgroundColor: 'lightgray',
+    backgroundColor: '#6305fc',
     padding: 10,
     marginTop: 20,
     borderRadius: 5,
   },
   resetButtonText: {
     fontSize: 20,
+    color: '#ccc',
+  },
+  smallText: {
+    marginTop: 5,
+    fontSize: 15,
+    color: '#ccc',
+  },
+  boldText: {
+    color: "#6999fc",
+    fontWeight: 'bold',
+  },
+  redText: {
+    color: '#ea5b5b',
+    textShadowColor: '#b22222', // Adjust color to your preference
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+  },
+  blueText: {
+    color: '#45bbd8',
+    textShadowColor: '#00f', // Adjust color to your preference
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
   },
 });
-
