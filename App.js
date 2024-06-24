@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 
 export default function App() {
@@ -39,7 +40,7 @@ export default function App() {
         return;
       }
       // Alternate between X and O for the next move
-      setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
+      setCurrentPlayer(currentPlayer === 'X' ? '◯' : 'X');
       // Update the state with the new board
       setBoard(newBoard);
     }
@@ -104,10 +105,13 @@ export default function App() {
         {row.map((cell, colIndex) => {
           // Determine the border style for the current cell
           let borderStyle = {};
+          // middle cell to have a full border
           if (rowIndex === 1 && colIndex === 1) {
             borderStyle = styles.boxFullBorder;
+            // the middle top and bottom cells to have leftright border
           } else if (rowIndex === 0 && colIndex === 1 || rowIndex === 2 && colIndex === 1) {
             borderStyle = styles.boxLeftRightBorder;
+            // the middle left and right cells to have topbottom border
           } else if (rowIndex === 1 && (colIndex === 0 || colIndex === 2)) {
             borderStyle = styles.boxTopBottomBorder;
           }
@@ -128,6 +132,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <StatusBar hidden />
       {renderBoard()}
       <TouchableOpacity style={styles.resetButton} onPress={resetBoard}>
         <Text style={styles.resetButtonText}>Reset</Text>
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cellText: {
-    fontSize: 30,
+    fontSize: 60,
   },
   boxFullBorder: {
     borderWidth: 1,
