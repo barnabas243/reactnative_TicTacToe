@@ -147,6 +147,7 @@ export default function App() {
     inputRange: [0, 0.33, 0.66, 1],
     outputRange: gradientColors,
   });
+
   // Render the board
   const renderBoard = () => {
     return board.map((row, rowIndex) => (
@@ -280,13 +281,13 @@ const styles = StyleSheet.create({
   },
   redText: {
     color: '#ea5b5b',
-    textShadowColor: '#b22222', // Adjust color to your preference
+    textShadowColor: '#b22222',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,
   },
   blueText: {
     color: '#45bbd8',
-    textShadowColor: '#00f', // Adjust color to your preference
+    textShadowColor: '#00f',
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 10,
   },
