@@ -1,6 +1,6 @@
-# Tic Tac Toe Game
+# Tic Tac Toe
 
-This is a simple Tic Tac Toe built using React Native.
+This is a simple responsive Tic Tac Toe built using React Native for **CM3050 graded assignment 2.701 (Responsive naughts and crosses UI)**.
 
 please view the expo.txt file for the link to the online development server
 
