@@ -1,3 +1,6 @@
+// Author: Barnabas Tan
+// Code was written by Author
+
 import React, { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -112,6 +115,7 @@ export default function App() {
       setBoard(newBoard);
     }
   };
+
   // Function to check for winning condition
   const checkWinner = (
     board: string[][],
