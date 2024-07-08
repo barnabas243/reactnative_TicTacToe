@@ -1,8 +1,8 @@
 // Author: Barnabas Tan
 // Code was written by Author
 
-import React, { useState, useEffect, useRef } from "react";
-import { StatusBar } from "expo-status-bar";
+import React, {useState, useEffect, useRef} from 'react';
+import {StatusBar} from 'expo-status-bar';
 import {
   StyleSheet,
   ImageBackground,
@@ -13,39 +13,38 @@ import {
   Easing,
   TouchableOpacity,
   SafeAreaView,
-} from "react-native";
+} from 'react-native';
 
-const gradientColors = ["#1037e5", "#B38DFD", "#9456FE", "#6305fc"];
-
-const image = require("./assets/background.jpg");
+const GRADIENT_COLORS = ['#1037e5', '#B38DFD', '#9456FE', '#6305fc'];
+const BACKGROUND_IMAGE = require('./assets/background.jpg');
 
 export default function App() {
   // Initialize the Tic-Tac-Toe board as a 3x3 matrix
-  const [board, setBoard] = useState<string[][]>([
-    ["◯", "◯", "◯"],
-    ["X", "◯", "X"],
-    ["◯", "X", "X"],
+  const [board, setBoard] = useState([
+    ['◯', '◯', '◯'],
+    ['X', '◯', 'X'],
+    ['◯', 'X', 'X'],
   ]);
 
   // Track the current player (X or ◯)
-  const [currentPlayer, setCurrentPlayer] = useState<"X" | "◯">("X");
+  const [currentPlayer, setCurrentPlayer] = useState<'X' | '◯'>('X');
 
   // Track if the game is over
-  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState(false);
 
   // Track window dimensions
-  const [dimensions, setDimensions] = useState(Dimensions.get("window"));
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
   // add an onchange listener to the Dimensions
   useEffect(() => {
     const updateDimensions = () => {
-      setDimensions(Dimensions.get("window"));
+      setDimensions(Dimensions.get('window'));
     };
 
-    Dimensions.addEventListener("change", updateDimensions);
+    Dimensions.addEventListener('change', updateDimensions);
 
     return () => {
-      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener('resize', updateDimensions);
     };
   }, []);
 
@@ -69,7 +68,7 @@ export default function App() {
             easing: Easing.linear,
             useNativeDriver: false,
           }),
-        ])
+        ]),
       ).start();
     };
 
@@ -78,7 +77,7 @@ export default function App() {
 
   const borderColor = animatedValue.interpolate({
     inputRange: [0, 0.33, 0.66, 1],
-    outputRange: gradientColors,
+    outputRange: GRADIENT_COLORS,
   });
 
   // Function to handle a move on the board
@@ -90,7 +89,7 @@ export default function App() {
     let newBoard = [...board];
 
     // Check if the selected cell is empty
-    if (newBoard[row][col] === "") {
+    if (newBoard[row][col] === '') {
       // Update the value at the selected position with the current player's mark
       newBoard[row][col] = currentPlayer;
 
@@ -109,7 +108,7 @@ export default function App() {
       }
 
       // Alternate between X and O for the next move
-      setCurrentPlayer(currentPlayer === "X" ? "◯" : "X");
+      setCurrentPlayer(currentPlayer === 'X' ? '◯' : 'X');
 
       // Update the state with the new board
       setBoard(newBoard);
@@ -117,12 +116,7 @@ export default function App() {
   };
 
   // Function to check for winning condition
-  const checkWinner = (
-    board: string[][],
-    row: number,
-    col: number,
-    currentPlayer: string
-  ) => {
+  const checkWinner = (board: string[][], row: number, col: number, currentPlayer: string) => {
     // Check for horizontal line
     if (
       board[row][0] === currentPlayer &&
@@ -158,7 +152,7 @@ export default function App() {
   const checkDraw = (board: string[][]) => {
     for (let row of board) {
       for (let cell of row) {
-        if (cell === "") {
+        if (cell === '') {
           return false; // Grid is not full
         }
       }
@@ -169,11 +163,11 @@ export default function App() {
   // Function to reset the board
   const resetBoard = () => {
     setBoard([
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
     ]);
-    setCurrentPlayer("X"); // Reset the current player to X
+    setCurrentPlayer('X'); // Reset the current player to X
     setGameOver(false); // Mark the game as not over
   };
 
@@ -192,15 +186,12 @@ export default function App() {
     const cellSize = Math.min(windowWidth, maxBoardHeight) / 3;
 
     return board.map((row: string[], rowIndex: number) => (
-      <SafeAreaView key={rowIndex} style={[styles.row, { height: cellSize }]}>
+      <SafeAreaView key={rowIndex} style={[styles.row, {height: cellSize}]}>
         {row.map((cell, colIndex: number) => {
           let borderStyle = {};
           if (rowIndex === 1 && colIndex === 1) {
             borderStyle = styles.boxFullBorder;
-          } else if (
-            (rowIndex === 0 && colIndex === 1) ||
-            (rowIndex === 2 && colIndex === 1)
-          ) {
+          } else if ((rowIndex === 0 && colIndex === 1) || (rowIndex === 2 && colIndex === 1)) {
             borderStyle = styles.boxLeftRightBorder;
           } else if (rowIndex === 1 && (colIndex === 0 || colIndex === 2)) {
             borderStyle = styles.boxTopBottomBorder;
@@ -208,20 +199,14 @@ export default function App() {
           return (
             <TouchableOpacity
               key={colIndex}
-              style={[
-                styles.col,
-                borderStyle,
-                { width: cellSize, height: cellSize },
-              ]}
+              style={[styles.col, borderStyle, {width: cellSize, height: cellSize}]}
               onPress={() => handleMove(rowIndex, colIndex)}
-              disabled={cell !== "" || gameOver}
-            >
+              disabled={cell !== '' || gameOver}>
               <Text
                 style={[
-                  { fontSize: cellSize * 0.5 }, // Adjust font size based on cell size
-                  cell === "X" ? styles.blueGlow : styles.redGlow,
-                ]}
-              >
+                  {fontSize: cellSize * 0.5}, // Adjust font size based on cell size
+                  cell === 'X' ? styles.blueGlow : styles.redGlow,
+                ]}>
                 {cell}
               </Text>
             </TouchableOpacity>
@@ -238,7 +223,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+      <ImageBackground source={BACKGROUND_IMAGE} resizeMode="cover" style={styles.image}>
         <Animated.View
           style={[
             styles.innerContainer,
@@ -248,8 +233,7 @@ export default function App() {
               borderWidth: adjustedSizing * 0.006,
               padding: adjustedSizing * 0.04,
             },
-          ]}
-        >
+          ]}>
           {renderBoard()}
           <TouchableOpacity
             style={[
@@ -260,16 +244,8 @@ export default function App() {
                 marginTop: adjustedSizing * 0.04,
               },
             ]}
-            onPress={resetBoard}
-          >
-            <Text
-              style={[
-                styles.resetButtonText,
-                { fontSize: adjustedSizing * 0.05 },
-              ]}
-            >
-              Reset
-            </Text>
+            onPress={resetBoard}>
+            <Text style={[styles.resetButtonText, {fontSize: adjustedSizing * 0.05}]}>Reset</Text>
           </TouchableOpacity>
           <Text
             style={[
@@ -278,8 +254,7 @@ export default function App() {
                 marginTop: adjustedSizing * 0.02,
                 fontSize: adjustedSizing * 0.03,
               },
-            ]}
-          >
+            ]}>
             Tap <Text style={styles.boldText}>reset</Text> to play
           </Text>
         </Animated.View>
@@ -291,69 +266,69 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   innerContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#000000d0",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000000d0',
   },
   row: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   col: {
     aspectRatio: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   boxFullBorder: {
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: '#fff',
   },
   boxTopBottomBorder: {
-    borderTopColor: "#fff",
+    borderTopColor: '#fff',
     borderTopWidth: 2,
-    borderBottomColor: "#fff",
+    borderBottomColor: '#fff',
     borderBottomWidth: 2,
   },
   boxLeftRightBorder: {
-    borderRightColor: "#fff",
+    borderRightColor: '#fff',
     borderRightWidth: 2,
-    borderLeftColor: "#fff",
+    borderLeftColor: '#fff',
     borderLeftWidth: 2,
   },
   redGlow: {
-    color: "#ea5b5b",
-    textShadowColor: "#b22222",
-    textShadowOffset: { width: 0, height: 0 },
+    color: '#ea5b5b',
+    textShadowColor: '#b22222',
+    textShadowOffset: {width: 0, height: 0},
     textShadowRadius: 10,
   },
   blueGlow: {
-    color: "#45bbd8",
-    textShadowColor: "#00f",
-    textShadowOffset: { width: 0, height: 0 },
+    color: '#45bbd8',
+    textShadowColor: '#00f',
+    textShadowOffset: {width: 0, height: 0},
     textShadowRadius: 10,
   },
   resetButton: {
-    backgroundColor: "#6305fc",
+    backgroundColor: '#6305fc',
   },
   resetButtonText: {
-    color: "#ccc",
+    color: '#ccc',
   },
   smallText: {
-    color: "#ccc",
+    color: '#ccc',
   },
   boldText: {
-    color: "#6999fc",
-    fontWeight: "bold",
+    color: '#6999fc',
+    fontWeight: 'bold',
   },
 });
